@@ -41,14 +41,14 @@ Before diving into the details of auto maps, I'll present a few examples that sh
 <br>**Note:** You could also have typed `fbi,cb` (without the `=`) or even `f+bi,cb`, either of which would have _added_ bold-italic on top of any existing format attributes.
 
 ## Operator Auto Maps
-**Ojective (part 1):** Make the word under the cursor bold red.
+**Objective (part 1):** Make the word under the cursor bold red.
 1. In Normal mode, position cursor on word to be highlighted
 1. Type `\h` (enters "operator-pending" mode)
 1. Type `iw` (specifies "inner word" text object)
 1. At the prompt, type `cr,f=b`
 1. Hit Enter to apply highlighting
 
-**Ojective (part 2):** Italicize and underline the current and subsequent 2 lines, highlighting the background green (without losing the highlighting applied to the word in part 1).
+**Objective (part 2):** Italicize and underline the current and subsequent 2 lines, highlighting the background green (without losing the highlighting applied to the word in part 1).
 1. In Normal mode, with cursor still in the line from the preceding example...<br>
    Type `\h` (enters "operator-pending" mode)
 1. Hit `2j` (includes current and next 2 lines in range)
@@ -177,7 +177,10 @@ smart | Complex logic uses 'tabstop' and 'shiftwidth' to determine whether a seq
 `:help txtfmt-'leadingindent'`
 
 ## "Smart" Shift/Indent Overrides
-Because highlighting tokens are invisible, yet appear as normal text to Vim, their presence in leading indent would lead to unexpected shift/indent behavior if Txtfmt did not override the builtin shift/indent commands `<<`, `>>`, `CTRL-T` and `CTRL-D`. Txtfmt's overrides understand the special role of tokens in a Txtfmt buffer (as well as the implications of the various `'leadingindent'` option settings), and will go to great lengths to ensure that various shift/indent commands "do the right thing".
+Because highlighting tokens are invisible, yet appear as normal text to Vim, their presence in leading indent could lead to unexpected shift/indent behavior if Txtfmt did not override the builtin shift/indent commands `<<`, `>>`, `CTRL-T` and `CTRL-D`. Txtfmt's overrides understand the special role of tokens in a Txtfmt buffer (as well as the implications of the various `'leadingindent'` option settings), and will go to great lengths to ensure that various shift/indent commands "do the right thing".
+
+## "Smart" :Retab Command
+For reasons described in the preceding section, the presence of highlighting tokens in leading indent tends to break the behavior of Vim's builtin `:retab` command. Accordingly, Txtfmt provides a token-aware `:Retab`, invoked just like the builtin :retab, which attempts to make retabbing work sensibly when leading indent contains Txtfmt tokens, taking into account the buffer's `'leadingindent'` option.
 
 # Manual Maps
 Manual maps are used to insert specific highlighting tokens at specific locations in the buffer. Each token determines either the text color, background color, or format attributes in effect up until the subsequent token of the same type (possibly the end token `'-'`). With auto maps, you simply specify the desired highlighting changes, and Txtfmt _automagically_ performs the required token insertions and removals. This task is actually far more complex than it sounds. To see why, suppose that after selecting some text, you use an auto map with highlighting spec `fb,cr,kg` (add bold, text red, background green). You might assume that Txtfmt would insert 6 tokens as follows:
